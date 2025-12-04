@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>VoidRinth</title>
+  <style>
+
+  .home-image {  
+  width: 200px;  
+  height: 200px;  
+  background-image: url('cute.png'); /* replace with your image */  
+  background-size: cover;  
+  background-position: center;  
+  margin-top: 20px;  
+  border: 0px solid #fff; /* optional border line */  
+  border-radius: 0px;      /* optional rounded corners */  
+  }
+
+  .about-image {  
+  width: 220px;  
+  height: 400px;  
+  background-image: url('laki.png'); /* replace with your image */  
+  background-size: cover;  
+  background-position: center;  
+  margin-top: 20px;  
+  border: 0px solid #fff; /* optional border line */  
+  border-radius: 0px;      /* optional rounded corners */  
+  } 
+
+  .social-image {  
+  width: 220px;  
+  height: 120px;  
+  background-image: url('social.png'); /* replace with your image */  
+  background-size: cover;  
+  background-position: center;  
+  margin-top: 20px;  
+  border: 0px solid #fff; /* optional border line */  
+  border-radius: 0px;      /* optional rounded corners */  
+  }  
+
+  /* ---------------- Local Fonts ---------------- */  
+  @font-face { font-family: 'Mten'; src: url('Mten.ttf') format('truetype'); }  
+
+  /* ---------------- Global ---------------- */  
+  :root { --bg:#000; --fg:#fff; }  
+  html,body { height:100%; margin:0; color:var(--fg); overflow:hidden; font-family:'Mten', sans-serif; }  
+
+  /* ---------------- Page Layout ---------------- */  
+  .page { width:100%; height:100vh; display:flex; align-items:center; justify-content:center; flex-direction:column; text-align:center; position:relative; overflow:hidden;}  
+  .section { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; flex-direction:column; transition:opacity 0.8s ease, visibility 0.8s ease; opacity:0; visibility:hidden;}  
+  .section.active{ opacity:1; visibility:visible; }  
+  .section.hidden{ opacity:0; visibility:hidden; }  
+
+  /* ---------------- Intro ---------------- */  
+  #intro { background:url("1.webp") center/cover no-repeat; z-index:1; font-family:'Mten', sans-serif; }  
+  #title { display:flex; gap:10px; font-size:52px; letter-spacing:4px; will-change:filter, transform, opacity; color: rgba(255,255,255,0.85);}  
+  .letter { display:inline-block; opacity:0; transform:translateZ(0); will-change:transform,opacity,filter; }  
+
+  @keyframes fromTop {0%{transform:translateY(-220px);opacity:0;}100%{transform:translateY(0);opacity:1;}}  
+  @keyframes fromBottom {0%{transform:translateY(220px);opacity:0;}100%{transform:translateY(0);opacity:1;}}  
+  @keyframes fromLeft {0%{transform:translateX(-220px);opacity:0;}100%{transform:translateX(0);opacity:1;}}  
+  @keyframes fromRight {0%{transform:translateX(220px);opacity:0;}100%{transform:translateX(0);opacity:1;}}  
+  @keyframes flashIn {0%{filter:brightness(2.5);opacity:0;}70%{filter:brightness(2.5);opacity:1;}100%{filter:brightness(1);opacity:1;}}  
+  .glow { animation: glowPulse 1s ease forwards; }  
+  @keyframes glowPulse {0%{filter:brightness(1);}40%{filter:brightness(3);}100%{filter:brightness(1);} }  
+  #subtitle { margin-top:14px; font-size:16px; opacity:0; letter-spacing:2px; color: rgba(255,255,255,0.85); transform: translateY(6px); will-change:opacity, transform;}  
+  @keyframes fadeInSubtitle {from{opacity:0;transform:translateY(8px);}to{opacity:0.75;transform:translateY(0);}}  
+
+  /* ---------------- Part2 ---------------- */  
+  #part2 { font-family:'Mten', sans-serif; z-index:0; }  
+  #part2 h1, #part2 p { font-family:'Mten', sans-serif; color:#fff; text-align:center; }  
+
+  /* ---------------- Nav & HDSA ---------------- */  
+  #navButton {  
+  position:fixed; top:20px; right:20px; width:30px; height:24px; display:flex; flex-direction:column; justify-content:space-between; cursor:pointer; z-index:100; opacity:0; pointer-events:none; transition:opacity 0.8s ease;  
+  }  
+  #navButton.show { opacity:1; pointer-events:auto; }  
+  .nav-line {height:4px; width:100%; background:#fff;}  
+  #hdsa {position:fixed; top:60px; right:20px; display:flex; flex-direction:column; gap:10px; opacity:0; transform:translateX(100px); pointer-events:none; transition:all 0.5s cubic-bezier(.22,.9,.2,1); z-index:99;}  
+  #hdsa.show { opacity:1; transform:translateX(0); pointer-events:auto; }  
+  .hdsa-btn {background:#fff; color:#000; padding:10px 17px; font-size:15px; font-family:'Mten', sans-serif; cursor:pointer; border:none; position:relative; transition: all 0.2s; text-decoration:none; display:inline-block; }  
+  .hdsa-btn::after { content:""; position:absolute; left:0; bottom:-4px; width:100%; height:4px; background:#999; }  
+  .hdsa-btn:hover { transform:translateY(-2px); }  
+  .hdsa-btn:active { transform:translateY(2px); }  
+
+  /* Pages inside Part2 */  
+  .pageContent { position:relative; width:100%; height:100%; display:flex; justify-content:center; align-items:center; }  
+
+  /* ---------------- FIXED: Only active page clickable ---------------- */  
+  .hdsa-page {  
+  position:absolute;  
+  top:0; left:0;  
+  width:100%; height:100%;  
+  opacity:0;  
+  transform:translateY(20px);  
+  transition:all 0.6s cubic-bezier(.22,.9,.2,1);  
+  text-align:center;  
+  display:flex;  
+  flex-direction:column;  
+  justify-content:center;  
+  align-items:center;  
+
+  pointer-events:none; /* inactive pages do not block clicks */  
+  }  
+  .hdsa-page.active {  
+  opacity:1;  
+  transform:translateY(0);  
+  pointer-events:auto; /* only active page can be clicked */  
+  }  
+  .hdsa-page.exit {  
+  opacity:0;  
+  transform:translateY(-20px);  
+  pointer-events:none;  
+  }  
+
+  /* ---------------- HDSA Unique Backgrounds ---------------- */  
+  #home { background: url("2.webp") center/cover no-repeat; }  
+  #downloads {   
+  background: url("3.webp") center/cover no-repeat;   
+  display:flex;   
+  flex-direction:column;   
+  justify-content:flex-start;   
+  align-items:center;   
+  overflow-y:auto;   
+  position:relative;   
+  z-index:1;   
+  padding-top:40px;  
+  color: rgba(255,255,255,0.85);  
+  }  
+  #social { background: url("4.webp") center/cover no-repeat; }  
+  #about { background: url("5.webp") center/cover no-repeat; }  
+
+  /* ---------------- Downloads Cards ---------------- */  
+  .download-card {  
+  display:flex;  
+  align-items:center;  
+  justify-content:space-between;  
+  width:80%;  
+  max-width:600px;  
+  background: rgba(255,255,255,0.05);  
+  margin-bottom:20px;  
+  padding:10px 20px;  
+  border-radius:6px;  
+  color: rgba(255,255,255,0.85);  
+  position:relative;  
+  }  
+  .card-left { display:flex; align-items:center; gap:10px; }  
+  .card-left img { width:50px; height:50px; }  
+  .card-center { display:flex; flex-direction:column; align-items:center; }  
+  .card-center h2 { margin:0; font-size:18px; text-align:center; }  
+  .card-center p { margin:0; font-size:14px; text-align:center; }  
+  .card-right { display:flex; align-items:center; }  
+  .card-right .mbtn { background:#fff; color:#000; font-family:'Mten', sans-serif; border:none; padding:8px 16px; cursor:pointer; border-radius:4px; transition:all 0.2s; text-decoration:none; display:inline-block; }  
+  .card-right .mbtn:hover { transform:translateY(-2px); }  
+  .card-right .mbtn:active { transform:translateY(2px); }
+
+  #downloads-wrapper {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;   /* centers ALL cards */
+  justify-content: flex-start;
+  }
+  
+p.credits {
+    color: #ff0000 !important;
+    display: block !important;
+    position: relative !important;
+    z-index: 9999 !important;
+    text-align: center;
+    font-weight: bold;
+    margin-top: 20px;
+} 
+  </style>
+</head>
+<body>
+  <div id="intro" class="section active page">
+    <div id="title" aria-hidden="true"></div>
+    <div id="subtitle" aria-hidden="true"></div>
+  </div>
+  <div id="part2" class="section page">
+    <div class="hdsa-page active" id="home">
+      <h1>Home</h1>
+      <p style="max-width:600px; text-align:center; margin:10px auto; line-height:1.6;">Welcome to VoidRinth! This website is designed to showcase all of VinceCXD's projects, collaborations, and exclusive releases. Here you can find optimized Minecraft tools, performance boosters, texture packs, and much more. Explore the Downloads section for the latest releases, connect with us in Social, and learn more About the journey behind each project. Everything is crafted with care and attention to provide the best experience possible for our community. Thank you for visiting, and we hope you enjoy your stay!</p>
+      <p class="credits">Credits To AmBro For The Backgrounds</p>
+      <div class="home-image"></div>
+    </div>
+    <div id="downloads" class="hdsa-page">
+      <h1>Downloads</h1>
+      <div id="downloads-wrapper">
+        <!-- CARD 1 -->
+<div class="download-card">
+  <div class="card-left">
+    <img src="icon1.png" alt="Icon">
+  </div>
+  <div class="card-center">
+    <h2>MOptimized 1.2</h2>
+    <p>Hardcoded Apk</p>
+  </div>
+  <div class="card-right">
+    <a href="https://shrinkme.click/HgVNjc" target="_blank" class="hdsa-btn">Download</a>
+  </div>
+</div>
+
+<!-- CARD 2 -->
+<div class="download-card">
+  <div class="card-left">
+    <img src="icon2.png" alt="Icon">
+  </div>
+  <div class="card-center">
+    <h2>Void V7 Latest</h2>
+    <p>Best FPS Boost Texture Pack</p>
+  </div>
+  <div class="card-right">
+    <a href="https://shrinkme.click/ajSyi" target="_blank" class="hdsa-btn">Download</a>
+  </div>
+</div>
+
+<!-- CARD 3 -->
+<div class="download-card">
+  <div class="card-left">
+    <img src="icon3.webp" alt="Icon">
+  </div>
+  <div class="card-center">
+    <h2>TexBoost</h2>
+    <p>Best Lightweight Pack</p>
+  </div>
+  <div class="card-right">
+    <a href="https://shrinkme.click/MuUSRdO" target="_blank" class="hdsa-btn">Download</a>
+  </div>
+</div>
+
+<!-- CARD 4 -->
+<div class="download-card">
+  <div class="card-left">
+    <img src="icon6.webp" alt="Icon">
+  </div>
+  <div class="card-center">
+    <h2>Void V6 UBE</h2>
+    <p>Best of the best!</p>
+  </div>
+  <div class="card-right">
+    <a href="https://shrinkme.click/1D9DLA8L" target="_blank" class="hdsa-btn">Download</a>
+  </div>
+</div>
+
+<!-- CARD 5 -->
+<div class="download-card">
+  <div class="card-left">
+    <img src="icon7.webp" alt="Icon">
+  </div>
+  <div class="card-center">
+    <h2>Lumino V2</h2>
+    <p>100% performance 60% visuality</p>
+  </div>
+  <div class="card-right">
+    <a href="https://shrinkme.click/M7uc" target="_blank" class="hdsa-btn">Download</a>
+  </div>
+</div>
+
+<!-- CARD 6 -->
+<div class="download-card">
+  <div class="card-left">
+    <img src="icon8.webp" alt="Icon">
+  </div>
+  <div class="card-center">
+    <h2>Lumino V1</h2>
+    <p>100% performance</p>
+  </div>
+  <div class="card-right">
+    <a href="https://shrinkme.click/es9Bmr" target="_blank" class="hdsa-btn">Download</a>
+  </div>
+</div>
+
+<!-- CARD 7 -->
+<div class="download-card">
+  <div class="card-left">
+    <img src="icon9.webp" alt="Icon">
+  </div>
+  <div class="card-center">
+    <h2>Vannila Tweaks</h2>
+    <p>Best But Old</p>
+  </div>
+  <div class="card-right">
+    <a href="https://shrinkme.click/ECabKDY" target="_blank" class="hdsa-btn">Download</a>
+  </div>
+</div>
+      </div>
+    </div>
+  </div>
+  <div class="hdsa-page" id="social">
+    <h1>Social</h1>
+    <p style="max-width:600px; text-align:center; margin:10px auto; line-height:1.6;">Connect with VinceCXD on this link.</p>
+    <div style="margin-top:20px;">
+      <a href="https://guns.lol/_rexo" target="_blank" class="hdsa-btn">Visit Link</a>
+      <div class="social-image"></div>
+    </div>
+  </div>
+  <div class="hdsa-page" id="about">
+    <h1>About</h1>
+    <p style="max-width:600px; text-align:center; margin:10px auto; line-height:1.6;">VoidRinth is a project by VinceCXD dedicated to optimizing your Minecraft experience and showcasing unique tools, texture packs, and resources. Every release is carefully crafted to enhance gameplay, improve performance, and bring creative solutions for players. Our goal is to provide a smooth, enjoyable, and innovative environment for the Minecraft community. Explore the site, download the latest tools, and join us on this journey!</p>
+    <div class="about-image"></div>
+  </div>
+  <div id="navButton">
+    <div class="nav-line"></div>
+    <div class="nav-line"></div>
+    <div class="nav-line"></div>
+  </div>
+  <div id="hdsa">
+    <button class="hdsa-btn" data-page="home">Home</button> <button class="hdsa-btn" data-page="downloads">Downloads</button> <button class="hdsa-btn" data-page="social">Social</button> <button class="hdsa-btn" data-page="about">About</button>
+  </div>
+  <script>
+
+  // ---------------- Intro Animation ----------------  
+  (function(){  
+  const word = "VOIDRINTH";  
+  const directions = ["fromTop","fromLeft","fromRight","fromBottom"];  
+  const title = document.getElementById("title");  
+  const subtitle = document.getElementById("subtitle");  
+  const intro = document.getElementById("intro");  
+  const part2 = document.getElementById("part2");  
+  const navButton = document.getElementById("navButton");  
+
+  const perLetterDelay = 450;  
+  const entryDuration   = 1200;  
+  const flashDuration   = 1000;  
+  const glowDuration    = 1000;  
+  const postGlowPause   = 700;  
+
+  [...word].forEach((char,i)=>{  
+    const span = document.createElement("span");  
+    span.className="letter";  
+    span.textContent=char;  
+    const dir=directions[i%directions.length];  
+    const entryDurS=(entryDuration/1000)+"s";  
+    const flashDurS=(flashDuration/1000)+"s";  
+    const delayS=(i*perLetterDelay/1000)+"s";  
+    span.style.animation=`flashIn ${flashDurS} ease ${delayS} forwards, ${dir} ${entryDurS} cubic-bezier(.22,.9,.2,1) ${delayS} forwards`;  
+    title.appendChild(span);  
+  });  
+
+  const lastDelay=(word.length-1)*perLetterDelay;  
+  const lettersFinishAt=lastDelay+Math.max(entryDuration,flashDuration);  
+
+  subtitle.textContent="Clearing the way for you, sir.";  
+
+  setTimeout(()=>{  
+    title.classList.add("glow");  
+    subtitle.style.animation=`fadeInSubtitle 900ms ease forwards`;  
+    subtitle.style.animationDelay="150ms";  
+    setTimeout(()=>{  
+      title.classList.remove("glow");  
+      setTimeout(()=>{  
+        intro.classList.add("hidden");  
+        setTimeout(()=>{  
+          intro.classList.remove("active");  
+          part2.classList.add("active");  
+          navButton.classList.add("show"); // Nav shows here  
+        },840);  
+      },postGlowPause);  
+    },glowDuration);  
+  },lettersFinishAt+80);  
+
+  setTimeout(()=>{  
+    if(!part2.classList.contains("active")){  
+      intro.classList.add("hidden");  
+      setTimeout(()=>{  
+        intro.classList.remove("active");  
+        part2.classList.add("active");  
+        navButton.classList.add("show");  
+      },840);  
+    }  
+  },12000);  
+  })();  
+
+  // ---------------- HDSA Navigation ----------------  
+  const navButton=document.getElementById('navButton');  
+  const hdsa=document.getElementById('hdsa');  
+  navButton.addEventListener('click',()=>hdsa.classList.toggle('show'));  
+
+  const buttons=document.querySelectorAll('.hdsa-btn[data-page]');  
+  const pages=document.querySelectorAll('.hdsa-page');  
+
+  buttons.forEach(btn=>{  
+  btn.addEventListener('click',()=>{  
+    const target=btn.dataset.page;  
+    pages.forEach(p=>{  
+      if(p.classList.contains('active') && p.id!==target){  
+        p.classList.add('exit');  
+        setTimeout(()=>{p.classList.remove('active','exit');},600);  
+      }  
+    });  
+    setTimeout(()=>{document.getElementById(target).classList.add('active');},50);  
+    hdsa.classList.remove('show');  
+  });  
+  });  
+  </script>
+</body>
+</html>
