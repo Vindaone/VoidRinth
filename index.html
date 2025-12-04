@@ -40,7 +40,16 @@
   }  
 
   /* ---------------- Local Fonts ---------------- */  
-  @font-face { font-family: 'Mten'; src: url('Mten.woff2') format('woff2'); }  
+  @font-face {
+  font-family: 'Mten';
+  src: url('./Mten.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+body {
+  font-family: 'Mten', sans-serif;
+}  
 
   /* ---------------- Global ---------------- */  
   :root { --bg:#000; --fg:#fff; }  
