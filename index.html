@@ -173,6 +173,18 @@
     font-weight: bold;
     margin-top: 20px;
   } 
+
+  /* Remove ALL tap/click highlights on mobile */
+  * {
+  -webkit-tap-highlight-color: transparent;
+  tap-highlight-color: transparent;
+  }
+
+  /* Remove blue outline when clicking links or buttons */
+  a:focus,
+  button:focus {
+  outline: none !important;
+  }
   </style>
 </head>
 <body>
