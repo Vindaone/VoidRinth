@@ -130,7 +130,8 @@
   color: rgba(255,255,255,0.85);  
   }  
   #social { background: url("4.webp") center/cover no-repeat; }  
-  #about { background: url("5.webp") center/cover no-repeat; }  
+  #about { background: url("5.webp") center/cover no-repeat; }
+  #chart { background: url("fryy.webp") center/cover no-repeat; }  
 
   /* ---------------- Downloads Cards ---------------- */  
   .download-card {  
@@ -184,6 +185,30 @@
   a:focus,
   button:focus {
   outline: none !important;
+  }
+
+  #chart .item {
+  margin-bottom: 12px;
+  }
+
+  #chart .label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.85rem;
+  margin-bottom: 4px;
+  }
+
+  #chart .bar {
+  width: 100%;
+  height: 18px;
+  background: rgba(255,255,255,0.2);
+  border-radius: 4px;
+  }
+
+  #chart .fill {
+  height: 100%;
+  background-color: #dcdcdc;
+  transition: width 0.3s ease;
   }
   </style>
 </head>
@@ -294,7 +319,44 @@
     <div class="nav-line"></div>
   </div>
   <div id="hdsa">
-    <button class="hdsa-btn" data-page="home">Home</button> <button class="hdsa-btn" data-page="downloads">Downloads</button> <button class="hdsa-btn" data-page="social">Social</button> <button class="hdsa-btn" data-page="about">About</button>
+    <button class="hdsa-btn" data-page="home">Home</button> <button class="hdsa-btn" data-page="downloads">Downloads</button> <button class="hdsa-btn" data-page="social">Social</button> <button class="hdsa-btn" data-page="about">About</button> <button class="hdsa-btn" data-page="chart">Progress</button>
+  </div>
+  <div class="hdsa-page" id="chart">
+    <h1>Minecraft Optimized V1.3</h1>
+    <div style="width:100%; max-width:320px; margin:20px auto; text-align:left;">
+      <div class="item">
+        <div class="label">
+          <span>Texture</span><span>34%</span>
+        </div>
+        <div class="bar">
+          <div class="fill"></div>
+        </div>
+      </div>
+      <div class="item">
+        <div class="label">
+          <span>Code</span><span>87%</span>
+        </div>
+        <div class="bar">
+          <div class="fill"></div>
+        </div>
+      </div>
+      <div class="item">
+        <div class="label">
+          <span>Render</span><span>59%</span>
+        </div>
+        <div class="bar">
+          <div class="fill"></div>
+        </div>
+      </div>
+      <div class="item">
+        <div class="label">
+          <span>Compressiom</span><span>85%</span>
+        </div>
+        <div class="bar">
+          <div class="fill"></div>
+        </div>
+      </div>
+    </div>
   </div>
   <script>
 
@@ -381,6 +443,26 @@
     hdsa.classList.remove('show');  
   });  
   });  
+  </script> 
+  <script>
+
+
+  function fillBars() {
+  const items = document.querySelectorAll('#chart .item');
+  items.forEach(item => {
+    const percentSpan = item.querySelector('.label span:last-child');
+    const fillDiv = item.querySelector('.fill');
+    if(percentSpan && fillDiv){
+      let val = parseInt(percentSpan.textContent.replace('%','')) || 0;
+      val = Math.max(0, Math.min(100, val)); // clamp between 0-100
+      fillDiv.style.backgroundColor = '#fff'; // white fill
+      fillDiv.style.width = val + '%';
+    }
+  });
+  }
+
+  // Fill bars automatically when page loads
+  fillBars();
   </script>
 </body>
 </html>
